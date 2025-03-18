@@ -1,0 +1,26 @@
+@import "@fontsource/inter";
+@import "@fontsource/poppins";
+
+
+
+
+#root {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: "inter", "arial", "sans-serif";
+  overflow-x: hidden;
+  background-color: white;
+}
+
+.inter {
+  font-family: "inter";
+}
+
+.poppins {
+  font-family: "poppins";
+}
+
