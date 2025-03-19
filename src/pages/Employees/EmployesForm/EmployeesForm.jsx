@@ -41,14 +41,14 @@ const EmployeesForm = ({ open, onClose, onSubmit }) => {
     cnic: "",
     address: { street: "", city: "", state: "", zipcode: "" },
     dob: "",
-    gender: "Male",
+    gender: "",
     position: "",
     departmentId: "677bd85e5d0e81bbd0831c81",
     salary: "",
     joiningDate: "",
     status: "active",
     emergencyContact: { name: "", phone: "", relationship: "" },
-    leaveBalance: { annual: 0, sick: 0, casual: 0 },
+    leaveBalance: { annual: 1, sick: 1, casual: 1 },
   });
 
   // Universal change handler for nested fields
@@ -174,7 +174,7 @@ const EmployeesForm = ({ open, onClose, onSubmit }) => {
       cnic: "",
       address: { street: "", city: "", state: "", zipcode: "" },
       dob: "",
-      gender: "Male",
+      gender: "",
       position: "",
       departmentId: "677bd85e5d0e81bbd0831c81",
       salary: "",

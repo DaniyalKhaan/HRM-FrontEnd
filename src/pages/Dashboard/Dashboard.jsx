@@ -1,6 +1,6 @@
 import React from 'react'
 import Cards from './Cards/Cards'
-import Main_Dashboard from './Discription.jsx/Main_Dashboard'
+import Main_Dashboard from './Discription/Main_Dashboard'
 
 function Dashboard() {
   return (
