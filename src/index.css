@@ -66,3 +66,21 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.Mui-focused, 
+.Mui-focusVisible {
+  outline: none;
+  box-shadow: none;
+}
+
+.MuiButton-root:focus,
+.MuiInputBase-root:focus,
+.MuiOutlinedInput-root:focus,
+.MuiSelect-root:focus {
+  outline: none ;
+  box-shadow: none ;
+}
+
+* {
+  outline: none !important;
+}

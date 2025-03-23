@@ -1,5 +1,5 @@
 // components/EmployeesForm/EmployeesForm.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -12,14 +12,15 @@ import {
   StepLabel,
 } from "@mui/material";
 
-
 // Import the step components
-import BasicInfoStep from "./BasicInfoStep";
-import AddressStep from "./AddressStep";
-import JobDetailsStep from "./JobDetailsStep";
-import EmergencyContactStep from "./EmergencyContactStep";
-import ReviewStep from "./ReviewStep";
-import LeaveStep from "./LeavesStep";
+import BasicInfoStep from "./steps/Basic_Info";
+import AddressStep from "./steps/Address";
+import JobDetailsStep from "./steps/Job_Info";
+import EmergencyContactStep from "./steps/Emergency_Info";
+import ReviewStep from "./steps/Review";
+import LeaveStep from "./steps/Leaves";
+import { showSuccessAlert } from "../../../utilities/alerts/alertService";
+import { useEmployees } from "../context";
 
 const steps = [
   "Basic Info",
@@ -30,26 +31,56 @@ const steps = [
   "Review & Submit",
 ];
 
-const EmployeesForm = ({ open, onClose, onSubmit }) => {
+const EmployeesForm = ({ open, onClose, onSubmit, Mode }) => {
+  const { selectedEmployee } = useEmployees();
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    cnic: "",
-    address: { street: "", city: "", state: "", zipcode: "" },
-    dob: "",
-    gender: "",
-    position: "",
-    departmentId: "677bd85e5d0e81bbd0831c81",
-    salary: "",
-    joiningDate: "",
-    status: "active",
-    emergencyContact: { name: "", phone: "", relationship: "" },
-    leaveBalance: { annual: 1, sick: 1, casual: 1 },
-  });
+
+  // Initialize state conditionally based on Mode
+  const initialState =
+    Mode === "Update" && selectedEmployee
+      ? {
+          ...selectedEmployee,
+          firstName: `${selectedEmployee.firstName} ${
+            selectedEmployee.lastName
+          }`, // Combine first & last name
+          lastName: "", // Ensure lastName is empty since it's not used separately
+          departmentId: selectedEmployee.departmentId._id.toString(),
+        }
+      : {
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          cnic: "",
+          address: { street: "", city: "", state: "", zipcode: "" },
+          dob: "",
+          gender: "",
+          position: "",
+          departmentId: "",
+          salary: "",
+          joiningDate: "",
+          status: "active",
+          emergencyContact: { name: "", phone: "", relationship: "" },
+          leaveBalance: { annual: 1, sick: 1, casual: 1 },
+        };
+
+  const [formData, setFormData] = useState(initialState);
+
+  useEffect(() => {
+    if (Mode === "Update" && selectedEmployee) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...selectedEmployee,
+        firstName: `${selectedEmployee.firstName} ${
+          selectedEmployee.lastName
+        }`, // Combine first & last name
+        lastName: "", // Ensure lastName is empty since it's not used separately
+        departmentId: selectedEmployee.departmentId._id.toString(),
+      }));
+    }
+  }, [Mode, selectedEmployee]);
+
 
   // Universal change handler for nested fields
   const handleChange = (e) => {
@@ -67,31 +98,37 @@ const EmployeesForm = ({ open, onClose, onSubmit }) => {
 
   // Validation logic for each step
   const validateStep = () => {
-
-
     let stepErrors = {};
     switch (step) {
       case 0:
-        if (!formData.firstName || formData.firstName.trim().split(" ").length < 2) {
-          stepErrors.firstName = "Please enter full name (first and last name).";
+        if (
+          !formData.firstName ||
+          formData.firstName.trim().split(" ").length < 2
+        ) {
+          stepErrors.firstName =
+            "Please enter full name (first and last name).";
         }
         if (!formData.email.trim()) {
           stepErrors.email = "Email is required";
-        } else if (!/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+        } else if (
+          !/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(formData.email)
+        ) {
           stepErrors.email = "Please enter a valid email address";
         }
         if (!formData.phone.trim()) {
           stepErrors.phone = "Phone is required";
-        } else if (!/^(?:\+92|92)3[0-9]{9}$|^03[0-9]{9}$/.test(formData.phone)) {
+        } else if (
+          !/^(?:\+92|92)3[0-9]{9}$|^03[0-9]{9}$/.test(formData.phone)
+        ) {
           stepErrors.phone = "Please enter a valid phone number";
         }
-        
+
         if (!formData.cnic.trim()) {
           stepErrors.cnic = "CNIC is required";
         } else if (!/^\d{5}-\d{7}-\d{1}$/.test(formData.cnic)) {
           stepErrors.cnic = "Please enter a valid CNIC (e.g., 12345-1234567-1)";
         }
-        
+
         break;
       case 1:
         if (!formData.address.street.trim())
@@ -106,10 +143,10 @@ const EmployeesForm = ({ open, onClose, onSubmit }) => {
       case 2:
         if (!formData.position.trim())
           stepErrors.position = "Position is required";
-        if (!formData.salary)
-          stepErrors.salary = "Salary is required";
-        if (!formData.dob)
-          stepErrors.dob = "Date of Birth is required";
+        if (!formData.departmentId.trim())
+          stepErrors.position = "Department is required";
+        if (!formData.salary) stepErrors.salary = "Salary is required";
+        if (!formData.dob) stepErrors.dob = "Date of Birth is required";
         if (!formData.joiningDate)
           stepErrors.joiningDate = "Joining Date is required";
         break;
@@ -119,23 +156,29 @@ const EmployeesForm = ({ open, onClose, onSubmit }) => {
 
         if (!formData.emergencyContact.phone.trim()) {
           stepErrors["emergencyContact.phone"] = "Phone is required";
-        } else if (!/^(?:\+92|92)3[0-9]{9}$|^03[0-9]{9}$/.test(formData.emergencyContact.phone)) {
-          stepErrors["emergencyContact.phone"] = "Please enter a valid phone number";
+        } else if (
+          !/^(?:\+92|92)3[0-9]{9}$|^03[0-9]{9}$/.test(
+            formData.emergencyContact.phone
+          )
+        ) {
+          stepErrors["emergencyContact.phone"] =
+            "Please enter a valid phone number";
         }
         if (!formData.emergencyContact.relationship.trim())
-          stepErrors["emergencyContact.relationship"] = "Relationship is required";
+          stepErrors["emergencyContact.relationship"] =
+            "Relationship is required";
         break;
-        case 4:
-          if (formData.leaveBalance.annual > 10) {
-            stepErrors["leaveBalance.annual"] = "Annual Leave cannot exceed 10";
-          }
-          if (formData.leaveBalance.sick > 5) {
-            stepErrors["leaveBalance.sick"] = "Sick Leave cannot exceed 5";
-          }
-          if (formData.leaveBalance.casual > 5) {
-            stepErrors["leaveBalance.casual"] = "Casual Leave cannot exceed 5";
-          }
-          break;
+      case 4:
+        if (formData.leaveBalance.annual > 10) {
+          stepErrors["leaveBalance.annual"] = "Annual Leave cannot exceed 10";
+        }
+        if (formData.leaveBalance.sick > 5) {
+          stepErrors["leaveBalance.sick"] = "Sick Leave cannot exceed 5";
+        }
+        if (formData.leaveBalance.casual > 5) {
+          stepErrors["leaveBalance.casual"] = "Casual Leave cannot exceed 5";
+        }
+        break;
       default:
         break;
     }
@@ -158,13 +201,16 @@ const EmployeesForm = ({ open, onClose, onSubmit }) => {
   };
 
   const handleSubmit = () => {
-    console.log("here")
+    console.log("here");
     const [firstName, ...lastNameArr] = formData.firstName.trim().split(" ");
 
     formData.firstName = firstName;
     formData.lastName = lastNameArr.join(" ");
     console.log(`Last name before submitting Form '${formData.lastName}'`);
     onSubmit(formData);
+    <showSuccessAlert></showSuccessAlert>;
+    showSuccessAlert("Employee Successfully Created.");
+
     // Reset form and step after submission if needed
     setFormData({
       firstName: "",
@@ -176,7 +222,7 @@ const EmployeesForm = ({ open, onClose, onSubmit }) => {
       dob: "",
       gender: "",
       position: "",
-      departmentId: "677bd85e5d0e81bbd0831c81",
+      departmentId: "",
       salary: "",
       joiningDate: "",
       status: "active",
@@ -205,13 +251,13 @@ const EmployeesForm = ({ open, onClose, onSubmit }) => {
             errors={errors}
           />
         );
-        case 2:
+      case 2:
         return (
           <JobDetailsStep
             formData={formData}
             handleChange={handleChange}
             errors={errors}
-            />
+          />
         );
       case 3:
         return (
@@ -238,7 +284,9 @@ const EmployeesForm = ({ open, onClose, onSubmit }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Add Employee</DialogTitle>
+      <DialogTitle>
+        {Mode === "Create" ? "Add Employee" : "Edit Employee"}
+      </DialogTitle>
       <DialogContent>
         <Stepper activeStep={step} alternativeLabel>
           {steps.map((label) => (
@@ -267,7 +315,7 @@ const EmployeesForm = ({ open, onClose, onSubmit }) => {
           </Button>
         )}
         <Button onClick={onClose} color="secondary">
-          Cancel
+          {Mode === "Create" ? "Create" : "Update"}
         </Button>
       </DialogActions>
     </Dialog>

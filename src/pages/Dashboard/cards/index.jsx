@@ -1,10 +1,10 @@
 import React from "react";
 import { Stack } from "@mui/system";
-import Income_Card from "./Income_Card";
-import Expense_Card from "./Expense_Card";
-import Donut_Card from "./Donut_Card";
-import Label from "./DashboardHeading";
-import StatsCard from "../../../utilities.jsx/StatusCard";
+import Income_Card from "./Income";
+import Expense_Card from "./Expense";
+import Donut_Card from "./Donut";
+import Label from "./Heading";
+import StatsCard from "../../../utilities/cards/card";
 
 function Cards() {
   return (

@@ -11,6 +11,18 @@ export const getEmployees = async () => {
   }
 };
 
+// Get employee by ID
+export const getEmployeeById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/employees/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching employee by ID:", error);
+    throw error;
+  }
+};
+
+
 // Create new employee
 export const createEmployee = async (employeeData) => {
   try {
@@ -18,6 +30,16 @@ export const createEmployee = async (employeeData) => {
     return response.data;
   } catch (error) {
     console.error("Error creating employee:", error);
+    throw error;
+  }
+};
+
+export const updateEmployee = async (id, employeeData) => {
+  try {
+    const response = await axiosInstance.put(`/employees/${id}`, employeeData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating employee:", error);
     throw error;
   }
 };

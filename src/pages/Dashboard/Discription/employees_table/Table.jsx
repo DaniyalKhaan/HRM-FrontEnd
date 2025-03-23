@@ -1,6 +1,6 @@
 import React from 'react'
 import DynamicTable from '../../../../components/DynamicTable'
-import { useEmployees } from "../../../../pages/Employees/context"; // Import the context hook
+import { useEmployees } from "../../../Employees/context"; // Import the context hook
 
 
 function Table() {

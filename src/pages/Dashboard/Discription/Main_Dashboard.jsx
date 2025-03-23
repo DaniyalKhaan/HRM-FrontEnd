@@ -3,8 +3,8 @@ import AvailabilityForm from "./AvailabilityForm";
 import StatusTable from "./StatusTable";
 import { Stack } from "@mui/system";
 import EarningSummaryGraph from "./EarningSummaryGraph";
-import DashboardTable from "./EmployeesTable/DashboardTable";
-import DashboardHeader from "./DashboardHeader/DashboardHeader";
+import DashboardTable from "./employees_table/Table";
+import DashboardHeader from "./header/Header";
 import { EmployeesProvider } from "../../Employees/context";
 
 function Main_Dashboard() {

@@ -35,13 +35,23 @@ const JobDetailsStep = ({ formData, handleChange, errors }) => {
       </Grid>
       <Grid item xs={6}>
         <TextField
-          label="Department ID"
+          select
+          label="Department"
           name="departmentId"
           value={formData.departmentId}
+          onChange={handleChange}
           fullWidth
           required
-          disabled
-        />
+          error={Boolean(errors.position)}
+          helperText={errors.position}
+        >
+          <MenuItem value="677bd85e5d0e81bbd0831c81">App Development</MenuItem>
+          <MenuItem value="677bd8865d0e81bbd0831c8d">Android Development</MenuItem>
+          <MenuItem value="677cc2c8595114ef21f3431e">Web Development</MenuItem>
+          <MenuItem value="677d0371517f4cbf506253f3">App Development</MenuItem>
+          <MenuItem value="677d04b2517f4cbf5062544c">App Development</MenuItem>
+
+        </TextField>
       </Grid>
       <Grid item xs={6}>
         <TextField

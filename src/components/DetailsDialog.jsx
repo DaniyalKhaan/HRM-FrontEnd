@@ -13,24 +13,28 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const DetailsDialog = ({ open, onClose, title, data, sections }) => {
+
+  const getNestedValue = (obj, path, defaultValue = "N/A") => {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj) || defaultValue;
+  };
   if (!data) return null; // or show a fallback message
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers >
         {sections.map((section, idx) => (
-          <Accordion key={idx}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>
+          <Accordion key={idx} >
+            <AccordionSummary sx={{bgcolor: "#d3d3d3"}} expandIcon={<ExpandMoreIcon />} >
+              <Typography >
                 <strong>{section.title}</strong>
               </Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails >
               {section.fields.map((field, fidx) => (
                 <Typography key={fidx}>
                   <strong>{field.label}:</strong>{" "}
-                  {field.render ? field.render(data) : data[field.key] || "N/A"}
+                  {field.render ? field.render(data) : getNestedValue(data, field.key)}
                 </Typography>
               ))}
             </AccordionDetails>

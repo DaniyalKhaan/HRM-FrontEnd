@@ -1,5 +1,5 @@
 import React from 'react'
-import Cards from './Cards/Cards'
+import Cards from './cards'
 import Main_Dashboard from './Discription/Main_Dashboard'
 
 function Dashboard() {

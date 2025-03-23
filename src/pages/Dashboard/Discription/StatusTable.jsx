@@ -13,6 +13,8 @@ import {
   IconButton,
 } from "@mui/material";
 import { FiFilter } from "react-icons/fi";
+import { EmployeesProvider } from "../../Employees/context";
+import DashboardTable from "./employees_table/Table";
 
 // Dummy Data
 const carStatusData = [
@@ -42,54 +44,9 @@ function StatusTable() {
           </IconButton>
         </div>
 
-        {/* Table */}
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>No.</TableCell>
-                <TableCell>Car No.</TableCell>
-                <TableCell>Driver</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Earning</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((row, index) => (
-                <TableRow key={row.id}>
-                  <TableCell>{String(index + 1).padStart(2, "0")}</TableCell>
-                  <TableCell>
-                    <Typography variant="body2" sx={{ bgcolor: "#F5F5F5", p: 1, borderRadius: 1 }}>
-                      {row.carNo}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{row.driver}</TableCell>
-                  <TableCell>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <div
-                        style={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: "50%",
-                          backgroundColor: row.statusColor,
-                          marginRight: 6,
-                        }}
-                      ></div>
-                      {row.status}
-                    </div>
-                  </TableCell>
-                  <TableCell>${row.earning.toFixed(2)}</TableCell>
-                  <TableCell>
-                    <Button variant="contained" color="primary" size="small">
-                      Details
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <EmployeesProvider>
+            <DashboardTable />
+        </EmployeesProvider>
       </CardContent>
     </Card>
   );

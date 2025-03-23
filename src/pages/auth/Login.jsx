@@ -9,11 +9,12 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext"; // Correct context path
-import axiosInstance from "../services/axiosInstance"; // Use custom axios instance
+import { AuthContext } from "../../context/AuthContext"; // Correct context path
+import axiosInstance from "../../services/axiosInstance"; // Use custom axios instance
 import { useNavigate } from "react-router-dom";
+import { showSuccessAlert, showErrorAlert } from "../../utilities/alerts/alertService";
 
-import OneImage from "../assets/one.png";
+import OneImage from "../../assets/one.png";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,6 +32,7 @@ export default function Login() {
         password,
       });
 
+
       console.log("Response data:", response.data); // Debug response
 
       const token = response.data.access_token; // Extract token (adjust key if backend differs)
@@ -38,14 +40,14 @@ export default function Login() {
 
       if (token) {
         login(token); // Save token in context & localStorage via context function
-        navigate("/dashboard"); // Navigate to dashboard after login
+        showSuccessAlert("Login successful!", () => navigate("/dashboard"));
       } else {
-        alert("Token not received. Please check your credentials or backend response.");
+        showErrorAlert("Token not received. Please check your credentials.");
       }
     } catch (error) {
       console.error("Login error:", error);
       const message = error.response?.data?.message || "Invalid username or password!";
-      alert(message); // Show error message
+      showErrorAlert(message);
     }
   };
 

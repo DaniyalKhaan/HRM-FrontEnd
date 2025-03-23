@@ -6,14 +6,14 @@ import {
   Navigate,
 } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import Dashboard from "./pages/dashboard";
 import Users from "./pages/Users";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
-import Login from "./pages/Login"; // Add your Login page import
+import Login from "./pages/auth/Login"; // Add your Login page import
 import { AuthContextProvider, AuthContext } from "./context/AuthContext";
-import Employees from "./pages/Employees/Employees";
+import Employees from "./pages/Employees";
 import { EmployeesProvider } from "./pages/Employees/context";
 
 // Wrap app with AuthContext and Router

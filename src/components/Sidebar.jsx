@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Home, Settings, Info, Logout } from "@mui/icons-material";
 import BadgeIcon from '@mui/icons-material/Badge';
-import useLogout from '../pages/Logout'; // adjust path if needed
+import useLogout from '../pages/auth/Logout'; // adjust path if needed
 
 const sidebarWidth = 180;
 
@@ -54,7 +54,7 @@ export default function Sidebar() {
           }}
           variant="h4"
         >
-          My App
+          HRM
         </Typography>
       </Toolbar>
 

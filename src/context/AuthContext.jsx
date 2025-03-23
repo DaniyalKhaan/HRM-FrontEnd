@@ -7,7 +7,6 @@ export const AuthContextProvider = ({ children }) => {
   const [token, setToken] = useState(null); // Store token
   const [user, setUser] = useState(null); // Store user decoded from token
   const [loading, setLoading] = useState(true); // Loading state
-  const [employee, setEmployee] = useState(0); // ✅ Store employee count
 
   // Check for existing token on app load
   useEffect(() => {
@@ -16,16 +15,31 @@ export const AuthContextProvider = ({ children }) => {
       setToken(storedToken);
       const decodedUser = jwtDecode(storedToken); // Decode user data
       setUser(decodedUser);
+
+      if (decodedUser.username) {
+        console.log(`decode USER NAME : ${decodedUser.username}`)
+        localStorage.setItem("username", decodedUser.username);
+      }
     }
     setLoading(false); // Done loading
   }, []);
+
+  useEffect(() => {
+    console.log("User Updated:", user);
+  }, [user]); // ✅ Runs when `user` changes
 
   // Login function to store token
   const login = (receivedToken) => {
     setToken(receivedToken);
     localStorage.setItem("token", receivedToken);
+    
+    
     const decodedUser = jwtDecode(receivedToken);
     setUser(decodedUser);
+    if (decodedUser.username) {
+      console.log(`decode USER NAME : ${decodedUser.username}`)
+      localStorage.setItem("username", decodedUser.username);
+    }
   };
 
   // Logout function
@@ -33,6 +47,7 @@ export const AuthContextProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
   };
 
 

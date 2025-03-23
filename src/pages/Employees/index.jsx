@@ -1,6 +1,6 @@
 import { useState } from "react";
-import EmployeesTable from "./EmployeesTable";
-import EmployeeForm from "./EmployesForm/EmployeesForm";
+import EmployeesTable from "./Table";
+import EmployeeForm from "./add/Form";
 import { Button, Box, Typography } from "@mui/material";
 import { useEmployees } from "./context";
 
@@ -34,7 +34,7 @@ const Employees = () => {
         open={openForm}
         onClose={() => setOpenForm(false)}
         onSubmit={handleAdd}
-        mode="create"
+        Mode="Create"
       />
     </div>
   );
