@@ -24,9 +24,9 @@ export const EmployeesProvider = ({ children }) => {
       setEmployees((prev) =>
         prev.map((emp) => (emp._id === id ? updatedEmployee : emp)) // Update UI with new employee data
       );
-      if (selectedEmployee && selectedEmployee._id === id) {
-        setSelectedEmployee(updatedEmployee);
-      }
+      // if (selectedEmployee && selectedEmployee._id === id) {
+      //   setSelectedEmployee(updatedEmployee);
+      // }
     } catch (error) {
       console.error("Error updating employee:", error);
     }

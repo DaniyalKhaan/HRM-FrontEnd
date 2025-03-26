@@ -27,14 +27,29 @@ import EmployeeActions from "./Action";
 import DynamicTable from "../../components/DynamicTable";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DetailsDialog from "../../components/DetailsDialog";
-
+import Swal from "sweetalert2";
+import {
+  showSuccessAlert,
+  showErrorAlert,
+} from "../../utilities/alerts/alertService";
+import EmployeesForm from "./add";
 
 const EmployeesTable = () => {
-  const { employees, loading, error } = useEmployees(); // Consume context
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const {
+    employees,
+    loading,
+    error,
+    removeEmployee,
+    fetchEmployeeById,
+    setSelectedEmployee,
+    updateEmployee,
+  } = useEmployees(); // Consume context
+
+
+  const [viewEmployee, setViewEmployee] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-
-
+  const [formMode, setFormMode] = useState("Edit");
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const sections = [
     {
@@ -105,14 +120,14 @@ const EmployeesTable = () => {
     },
   ];
 
-  const columns1 = [
+  const employeeColumns = [
     { field: "name", headerName: "Name" },
     { field: "email", headerName: "Email" },
     { field: "department", headerName: "Department" },
     { field: "phone", headerName: "Phone" },
   ];
 
-  const data1 = employees.map((emp) => ({
+  const data = employees.map((emp) => ({
     id: emp._id, // Assuming `id` exists in employees
     name: emp.firstName + " " + emp.lastName,
     email: emp.email,
@@ -120,31 +135,71 @@ const EmployeesTable = () => {
     phone: emp.phone,
   }));
 
-  const columns2 = [
-    { field: "productId", headerName: "Product ID" },
-    { field: "productName", headerName: "Product Name" },
-    { field: "price", headerName: "Price ($)" },
-  ];
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to undo this action!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      width: "300px", // Reduce width
+      customClass: {
+        popup: "small-swal-popup",
+      }, // Apply custom class
+    }).then((result) => {
+      if (result.isConfirmed) {
+        removeEmployee(id);
+        showSuccessAlert("Employee deleted successfully!");
+      }
+    });
+  };
 
+  const fetchSingleEmployee = async (id) => {
+    try {
+      const employee = await fetchEmployeeById(id);
 
-  const employeeColumns = [
-    { field: "firstName", label: "Name" },
-    { field: "email", label: "Email" },
-    { field: "phone", label: "Phone" },
-    { field: "position", label: "Position" },
-  ];
+      console.log(employee);
+      // Set the selected employee in the context
+      setSelectedEmployee(employee);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleUpdate = async (id) => {
+    await fetchSingleEmployee(id); // Wait for the employee data to be set in context
+    setFormMode("Update");
+    setIsFormOpen(true);
+  };
 
   const handleOpenDialog = (id) => {
-    const employee = employees.find(emp => emp._id === id);
+    const employee = employees.find((emp) => emp._id === id);
     console.log(`ID ID ID: ${id}`);
     console.log(`Employee:`, employee);
-    setSelectedEmployee(employee);
+    setViewEmployee(employee);
     setDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
-    setSelectedEmployee(null);
+    setViewEmployee(null);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+  };
+
+  const handleFormSubmit = (data) => {
+    console.log("Submitted Daaaaaaaaaaaaaaaaataaaaaaaaaaaaaaaaa:", data);
+
+    if (data._id) {
+      console.log(`Id is present: here it is:  ${data._id}`);
+    }
+
+    updateEmployee( data._id , data);
+  
+    handleCloseForm();
   };
 
   // Handle loading and error states
@@ -153,27 +208,34 @@ const EmployeesTable = () => {
 
   return (
     <>
-
       {/* <DynamicTable columns={columns1} data={data1} /> */}
       <DynamicTable
-        columns={columns1}
-        data={data1}
+        columns={employeeColumns}
+        data={data}
         showEyeIcon={true}
         showEmployeeActions={true}
         showPagination={true}
         onViewDetails={handleOpenDialog}
-        onEdit={(employee) => console.log("Editing", employee)}
-        onDelete={(id) => console.log("Deleting employee with ID:", id)}
+        onEdit={handleUpdate}
+        onDelete={handleDelete}
       />
 
       <DetailsDialog
         open={dialogOpen}
         onClose={handleCloseDialog}
         title="Employee Details"
-        data={selectedEmployee}
+        data={viewEmployee}
         sections={sections}
       />
 
+      {isFormOpen && (
+        <EmployeesForm
+          open={isFormOpen}
+          onClose={handleCloseForm}
+          onSubmit={handleFormSubmit}
+          Mode={formMode}
+        />
+      )}
     </>
   );
 };

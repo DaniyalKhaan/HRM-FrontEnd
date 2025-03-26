@@ -32,16 +32,16 @@ function StatusTable() {
   };
 
   return (
-    <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
+    <Card sx={{ borderRadius: 2, boxShadow: 2, bgcolor:"" }}>
       <CardContent>
         {/* Header with Filter Button */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Typography variant="h6" fontWeight="bold">
-            Live Car Status
+            Employees
           </Typography>
-          <IconButton onClick={handleFilter}>
+          {/* <IconButton onClick={handleFilter}>
             <FiFilter />
-          </IconButton>
+          </IconButton> */}
         </div>
 
         <EmployeesProvider>

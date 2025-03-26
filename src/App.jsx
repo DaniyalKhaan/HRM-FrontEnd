@@ -14,7 +14,9 @@ import Settings from "./pages/Settings";
 import Login from "./pages/auth/Login"; // Add your Login page import
 import { AuthContextProvider, AuthContext } from "./context/AuthContext";
 import Employees from "./pages/Employees";
+import Department from "./pages/departments";
 import { EmployeesProvider } from "./pages/Employees/context";
+import { DepartmentProvider } from "./pages/departments/context";
 
 // Wrap app with AuthContext and Router
 export default function App() {
@@ -34,7 +36,7 @@ const AppRoutes = () => {
   if (loading) return <div>Loading...</div>; // Avoid rendering until done
 
   return (
-    <div style={{ display: "flex", backgroundColor: "", width: "98vw" }}>
+    <div style={{ display: "flex", backgroundColor: "blue", width: "98vw" }}>
       {token && <Sidebar />} {/* Show sidebar only if logged in */}
       <div
         style={{
@@ -72,6 +74,16 @@ const AppRoutes = () => {
             }
           />
 
+          <Route
+            path="/departments"
+            element={
+              <ProtectedRoute>
+                <DepartmentProvider>
+                  <Department />
+                </DepartmentProvider>
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/users"
             element={

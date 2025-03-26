@@ -9,7 +9,7 @@ import {
 import { IconButton, Tooltip } from "@mui/material";
 import { FiEdit, FiTrash } from "react-icons/fi";
 import { useState } from "react";
-import EmployeesForm from "./add/Form";
+import EmployeesForm from "./add";
 import { ObjectId } from "bson";
 
 const EmployeeActions = ({ employee, onEdit }) => {
@@ -71,7 +71,11 @@ const EmployeeActions = ({ employee, onEdit }) => {
   const handleFormSubmit = (data) => {
     console.log("Submitted Daaaaaaaaaaaaaaaaataaaaaaaaaaaaaaaaa:", data);
 
-    updateEmployee(data);
+    if (data._id) {
+      console.log(`Id is present: here it is:  ${data._id}`);
+    }
+
+    updateEmployee( data._id , data);
   
     handleCloseForm();
   };

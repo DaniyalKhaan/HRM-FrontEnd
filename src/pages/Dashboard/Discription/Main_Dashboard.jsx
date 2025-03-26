@@ -22,7 +22,7 @@ function Main_Dashboard() {
       <EmployeesProvider>
           <DashboardTable />
       </EmployeesProvider>
-      <StatusTable />
+      {/* <StatusTable /> */}
       <EarningSummaryGraph />
     </Stack>
   );

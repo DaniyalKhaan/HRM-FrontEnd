@@ -13,12 +13,14 @@ import {
 import { Home, Settings, Info, Logout } from "@mui/icons-material";
 import BadgeIcon from '@mui/icons-material/Badge';
 import useLogout from '../pages/auth/Logout'; // adjust path if needed
+import NfcIcon from '@mui/icons-material/Nfc';
 
 const sidebarWidth = 180;
 
 const pages = [
   { name: "Dashboard", path: "/", icon: <Home /> },
   { name: "Employees", path: "/employees", icon: <BadgeIcon /> },
+  { name: "Departments", path: "/departments", icon: <NfcIcon /> },
   { name: "Users", path: "/users", icon: <Settings /> },
   { name: "Analytics", path: "/analytics", icon: <Info /> },
   { name: "Profile", path: "/profile", icon: <Home /> },
@@ -73,9 +75,12 @@ export default function Sidebar() {
                   pl: "10px",
                   borderRadius: "4px",
                   position: "relative",
-                  bgcolor: isActive ? "#006AFF" : "transparent", // Active background
+                  bgcolor: isActive ? "rgba(96, 130, 182, 0.8)" : "transparent", // Active background
                   "&:hover": {
-                    bgcolor: "#006AFF",
+                    bgcolor: "rgba(96, 130, 182, 0.6)", // Background color on hover
+                    "& .MuiListItemIcon-root, & .MuiListItemText-root": {
+                      color: "#FFFFFF", // Change text & icon color to white on hover
+                    },
                   },
                   "& > .MuiListItemIcon-root": {
                     color: isActive ? "#FFFFFF" : "#909692",
@@ -120,7 +125,7 @@ export default function Sidebar() {
           bgcolor: "#404040",
           borderRadius: "8px",
           "&:hover": {
-            bgcolor: "#006AFF",
+            bgcolor: "rgba(96, 130, 182, 0.7)",
             "& > .MuiListItemIcon-root": { color: "#FFFFFF" },
             "& > .MuiListItemText-root": { color: "#FFFFFF" },
           },

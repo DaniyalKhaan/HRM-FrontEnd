@@ -200,7 +200,7 @@ const EmployeesForm = ({ open, onClose, onSubmit, Mode }) => {
     setStep((prev) => prev - 1);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async  () => {
     console.log("here");
     const [firstName, ...lastNameArr] = formData.firstName.trim().split(" ");
 
@@ -208,7 +208,6 @@ const EmployeesForm = ({ open, onClose, onSubmit, Mode }) => {
     formData.lastName = lastNameArr.join(" ");
     console.log(`Last name before submitting Form '${formData.lastName}'`);
     onSubmit(formData);
-    <showSuccessAlert></showSuccessAlert>;
     showSuccessAlert("Employee Successfully Created.");
 
     // Reset form and step after submission if needed
