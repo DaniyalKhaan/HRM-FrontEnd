@@ -1,27 +1,35 @@
-import { useContext, useState } from "react";
+import { useContext, useState,useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem } from "@mui/material";
-import { DepartmentContext } from "./context";
+import { DepartmentContext } from "../context";
 
 
 
 
-const index = ({ open, onClose }) => {
+const index = ({ open, onClose, mode = "create", initialData = null }) => {
 
-  const {employees} = useContext(DepartmentContext);
+  const {employees, addDepartment, updateDepartment} = useContext(DepartmentContext);
 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    dropdownValue: "",
+    managerId: "",
   });
 
   const [errors, setErrors] = useState({});
 
-  const dropdownOptions = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
-  ];
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        name: initialData.name || "",
+        description: initialData.description || "",
+        managerId: (typeof initialData.managerId === 'object' ? initialData.managerId._id : initialData.managerId) || "",
+      });
+    } else {
+      setFormData({ name: "", description: "", managerId: "" });
+    }
+  }, [initialData, open]);
+
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,8 +37,11 @@ const index = ({ open, onClose }) => {
 
   const validate = () => {
     let tempErrors = {};
-    if (!formData.name.trim()) tempErrors.name = "Name is required";
-    if (!formData.dropdownValue) tempErrors.dropdownValue = "Please select an option";
+    if (formData.name.trim().split(" ").length < 2) tempErrors.name = "Please enter at least two words.";
+    if (formData.description && formData.description.length < 20) {
+      tempErrors.description = "Description must be at least 20 characters long";
+    }
+    if (!formData.managerId) tempErrors.managerId = "Please select a Manager";
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -38,14 +49,21 @@ const index = ({ open, onClose }) => {
 
   const handleSubmit = () => {
     if (validate()) {
-      console.log("Form Submitted:", formData);
+      if (mode === "update") {
+        updateDepartment(initialData._id, formData);
+        console.log("Department Updated:", formData);
+      } else {
+        addDepartment(formData);
+        console.log("Department Created:", formData);
+      }
       onClose();
     }
   };
+  
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Create Department</DialogTitle>
+      <DialogTitle>{mode === "update" ? "Update Department" : "Create Department"}</DialogTitle>
       <DialogContent>
         <TextField
           label="Name"
@@ -54,10 +72,10 @@ const index = ({ open, onClose }) => {
           required
           value={formData.name}
           onChange={handleChange}
+          margin="dense"
           error={!!errors.name}
           helperText={errors.name}
-          margin="dense"
-        />
+          />
         <TextField
           label="Description"
           name="description"
@@ -66,29 +84,31 @@ const index = ({ open, onClose }) => {
           rows={3}
           value={formData.description}
           onChange={handleChange}
+          error={!!errors.description}
+          helperText={errors.description}
           margin="dense"
         />
         <TextField
           label="Select Manager"
-          name="dropdownValue"
+          name="managerId"
           select
           fullWidth
-          value={formData.dropdownValue}
+          value={formData.managerId}
           onChange={handleChange}
-          error={!!errors.dropdownValue}
-          helperText={errors.dropdownValue}
+          error={!!errors.managerId}
+          helperText={errors.managerId}
           margin="dense"
         >
           {employees.map((emp) => (
             <MenuItem key={emp._id} value={emp._id}>
-              {`${emp.firstName} "" ${emp.lastName}`}
+              {`${emp.firstName} ${emp.lastName}`}
             </MenuItem>
           ))}
         </TextField>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">Cancel</Button>
-        <Button onClick={handleSubmit} color="primary" variant="contained">Create</Button>
+        <Button onClick={handleSubmit} color="primary" variant="contained">{mode === "update" ? "Update" : "Create"}</Button>
       </DialogActions>
     </Dialog>
   );

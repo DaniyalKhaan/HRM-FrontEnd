@@ -131,7 +131,7 @@ export default function Sidebar() {
           },
         }}
       >
-        <ListItemIcon sx={{ color: "#909692", minWidth: "30px" }}>
+        <ListItemIcon sx={{ color: "#909692", minWidth: "30px", pl:"8px" }}>
           <Logout />
         </ListItemIcon>
         <ListItemText primary="Logout" sx={{ color: "#909692", pt: "3.5px" }} />

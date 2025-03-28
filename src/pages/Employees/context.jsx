@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getEmployees, createEmployee, deleteEmployee, getEmployeeById,  updateEmployee as updateEmployeeService } from "../../services/employeeService";
+import { fetchDepartments } from "../../services/departments";
+
 
 export const EmployeesContext = createContext();
 
@@ -9,6 +11,8 @@ export const EmployeesProvider = ({ children }) => {
   const [selectedEmployee, setSelectedEmployee] = useState(null); // ✅ New state for selected employee
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [departments, setDepartments] = useState([]);
+
 
 
   const addEmployee = async (employeeData) => {
@@ -17,16 +21,18 @@ export const EmployeesProvider = ({ children }) => {
   };
 
 
+  useEffect(() => {
+    fetchEmployees();
+    getDepartments();
+  }, []);
+
+
 
   const updateEmployee = async (id, employeeData) => {
     try {
-      const updatedEmployee = await updateEmployeeService(id, employeeData); // API call to update employee
-      setEmployees((prev) =>
-        prev.map((emp) => (emp._id === id ? updatedEmployee : emp)) // Update UI with new employee data
-      );
-      // if (selectedEmployee && selectedEmployee._id === id) {
-      //   setSelectedEmployee(updatedEmployee);
-      // }
+      const updatedEmployee = await updateEmployeeService(id, employeeData);
+      await fetchEmployees();
+
     } catch (error) {
       console.error("Error updating employee:", error);
     }
@@ -56,12 +62,20 @@ export const EmployeesProvider = ({ children }) => {
       setLoading(false);
     }
   };
-  
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
 
-    // ✅ New function to fetch an employee by ID
+
+    const getDepartments = async () => {
+      try {
+        const data = await fetchDepartments();
+        setDepartments(data);
+      } catch (error) {
+        console.error("Failed to load departments:", error);
+      }
+    };
+  
+
+
+    // function to fetch an employee by ID
     const fetchEmployeeById = async (id) => {
       try {
         return await getEmployeeById(id);
@@ -72,7 +86,7 @@ export const EmployeesProvider = ({ children }) => {
     };
 
   return (
-    <EmployeesContext.Provider value={{ employees, selectedEmployee, setSelectedEmployee, loading, error, addEmployee, updateEmployee, fetchEmployeeById, removeEmployee }}>
+    <EmployeesContext.Provider value={{ departments, employees, selectedEmployee, setSelectedEmployee, loading, error, addEmployee, updateEmployee, fetchEmployeeById, removeEmployee }}>
       {children}
     </EmployeesContext.Provider>
   );

@@ -1,7 +1,9 @@
 import { Grid, TextField } from "@mui/material";
 import { MenuItem } from "@mui/material";
 
+
 const BasicInfoStep = ({ formData, handleChange, errors }) => {
+
 
   return (
     <Grid container spacing={2}>

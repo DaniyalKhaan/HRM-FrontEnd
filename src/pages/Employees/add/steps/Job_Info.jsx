@@ -1,10 +1,14 @@
+import { useContext } from "react";
 import { Grid, TextField, MenuItem } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useEmployees } from "../../context";
 
 const JobDetailsStep = ({ formData, handleChange, errors }) => {
+  const { departments } = useEmployees();
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={6}>
@@ -42,15 +46,14 @@ const JobDetailsStep = ({ formData, handleChange, errors }) => {
           onChange={handleChange}
           fullWidth
           required
-          error={Boolean(errors.position)}
-          helperText={errors.position}
+          error={Boolean(errors.departmentId)}
+          helperText={errors.departmentId}
         >
-          <MenuItem value="677bd85e5d0e81bbd0831c81">App Development</MenuItem>
-          <MenuItem value="677bd8865d0e81bbd0831c8d">Android Development</MenuItem>
-          <MenuItem value="677cc2c8595114ef21f3431e">Web Development</MenuItem>
-          <MenuItem value="677d0371517f4cbf506253f3">App Development</MenuItem>
-          <MenuItem value="677d04b2517f4cbf5062544c">App Development</MenuItem>
-
+          {departments.map((dept) => (
+            <MenuItem key={dept._id} value={dept._id}>
+              {dept.name}
+            </MenuItem>
+          ))}
         </TextField>
       </Grid>
       <Grid item xs={6}>
@@ -113,9 +116,25 @@ const JobDetailsStep = ({ formData, handleChange, errors }) => {
             }}
           />
         </Grid>
+        <Grid item xs={6}>
+        <TextField
+          select
+          label="Status"
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          fullWidth
+          required
+          error={Boolean(errors.status)}
+          helperText={errors.status}
+        >
+          <MenuItem value="active">Active</MenuItem>
+          <MenuItem value="inactive">Inactive</MenuItem>
+          <MenuItem value="resigned">Resigned</MenuItem>
+          <MenuItem value="terminated">Terminated</MenuItem>
+        </TextField>
+      </Grid>
       </LocalizationProvider>
-
-
     </Grid>
   );
 };

@@ -1,6 +1,7 @@
 import { Box } from '@mui/system';
 import React, { useState, useContext } from 'react';
 import DynamicTable from '../../components/DynamicTable';
+import Form from './add';
 import { DepartmentContext } from "./context";
 import DetailsDialog from '../../components/DetailsDialog';
 import Swal from "sweetalert2";
@@ -9,9 +10,14 @@ import {
   showErrorAlert,
 } from "../../utilities/alerts/alertService";
 
+
 function Table() {
     const { departments, getDepartmentById, selectedDepartment, removeDepartment, setSelectedDepartment } = useContext(DepartmentContext);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [openFormForUpdate, setOpenFormForUpdate] = useState(false);
+    const [initialData, setInitialData] = useState();
+
+
     
 
 
@@ -112,6 +118,12 @@ function Table() {
     setSelectedDepartment(null);
   };
 
+  const handleUpdate = async (id) => {
+    const singleDepData = await getDepartmentById(id); // Wait for the department data to be set in context
+    setInitialData(singleDepData);
+    setOpenFormForUpdate(true);
+  };
+
     
 
   return (
@@ -122,7 +134,7 @@ function Table() {
         showEyeIcon={true} 
         showEmployeeActions={true}
         onViewDetails={handleOpenDialog}
-        // onEdit={() => console.log("Editing")}
+        onEdit={handleUpdate}
         onDelete={handleDelete}
           />
 
@@ -133,6 +145,16 @@ function Table() {
         data={selectedDepartment}
         sections={sections}
       />
+
+      { openFormForUpdate &&
+      <Form
+      open={openFormForUpdate}
+      onClose={ () => setOpenFormForUpdate(false)}
+      initialData={initialData}
+      mode='update'
+      
+       /> }
+
     </Box>
   )
 }

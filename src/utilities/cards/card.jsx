@@ -7,23 +7,15 @@ import {
   Chip,
   Box,
 } from "@mui/material";
-import { FiArrowDownRight, FiArrowUpRight } from "react-icons/fi";
 
 export default function StatsCard({
-  title = "Income",
+  title = "",
   chipLabel = "Today",
-  mainAmount = "$9460.00",
-  changeDirection = "down", // or "up"
-  changePercentage = "1.5%",
-  comparedText = "Compared to $9940 yesterday",
-  lastWeekLabel = "Last week Income",
-  lastWeekAmount = "$25658.00",
+  mainNo = "",
+  cardText = "",
   cardWidth = 288,
   cardHeight = 190,
 }) {
-  // Determine arrow icon and color based on changeDirection
-  const ArrowIcon = changeDirection === "up" ? FiArrowUpRight : FiArrowDownRight;
-  const arrowColor = changeDirection === "up" ? "green" : "red";
 
   return (
     <Card
@@ -66,19 +58,14 @@ export default function StatsCard({
           mb={1}
         >
           <Typography variant="h4" fontWeight="bold">
-            {mainAmount}
+            {mainNo}
           </Typography>
-          <Box display="flex" alignItems="center" mr={1}>
-            <ArrowIcon color={arrowColor} />
-            <Typography variant="body2" color="error" fontWeight="bold" ml={0.5}>
-              {changePercentage}
-            </Typography>
-          </Box>
+
         </Box>
 
         {/* Comparison Text */}
-        <Typography variant="body2" color="text.secondary">
-          {comparedText}
+        <Typography variant="body2" fontWeight="bold" color="text.secondary">
+          {cardText}
         </Typography>
 
         {/* Last Week Income */}
@@ -88,12 +75,7 @@ export default function StatsCard({
           alignItems="center"
           mt={1}
         >
-          <Typography variant="body2" fontWeight="bold" color="text.secondary">
-            {lastWeekLabel}
-          </Typography>
-          <Typography variant="body2" fontWeight="bold" color="text.secondary">
-            {lastWeekAmount}
-          </Typography>
+
         </Box>
       </CardContent>
     </Card>

@@ -23,7 +23,13 @@ const DetailsDialog = ({ open, onClose, title, data, sections }) => {
   if (!data) return null; // or show a fallback message
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth sx={{ bgcolor: "rgba(96, 130, 182, 0.2)" }}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      sx={{ bgcolor: "rgba(96, 130, 182, 0.2)" }}
+    >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent dividers>
         {sections.map((section, idx) => (
@@ -45,9 +51,10 @@ const DetailsDialog = ({ open, onClose, title, data, sections }) => {
                     flexDirection: "row",
                     alignItems: "center",
                     mb: 1, // margin bottom for spacing between rows
-                    backgroundColor: "rgba(96, 130, 182, 0.2)", // subtle background highlight
+                    backgroundColor: "rgba(0, 73, 182, 0.2)", // subtle background highlight
                     p: 1, // padding inside the box
                     borderRadius: 1, // rounded corners
+                    flexWrap: "wrap",
                   }}
                 >
                   <Typography
@@ -60,7 +67,17 @@ const DetailsDialog = ({ open, onClose, title, data, sections }) => {
                   >
                     {field.label}:
                   </Typography>
-                  <Typography variant="body1" sx={{ ml: 1 }}>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      ml: 1,
+                      px: 1,
+                      wordBreak: "break-word", // Ensures long words break instead of overflowing
+                      whiteSpace: "normal", // Ensures text wraps properly
+                      flex: 1, // Allow text to take available space
+                      overflowWrap: "break-word", // Alternative for breaking long words
+                    }}
+                  >
                     {field.render
                       ? field.render(data)
                       : getNestedValue(data, field.key)}

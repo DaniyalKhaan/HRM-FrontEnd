@@ -23,6 +23,7 @@ import {
   FormControlLabel, // <-- To wrap each switch with a label
   Button,
   Box,
+  Divider,
 } from "@mui/material";
 import {
   FiEdit,
@@ -183,16 +184,29 @@ function DynamicTable({
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    marginBottom: "8px",
+                    fontWeight: "bold",
                   }}
                 >
-                  <Button size="small" onClick={handleHideAll}>
+                  <Button
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                    size="small"
+                    onClick={handleHideAll}
+                  >
                     Hide All
                   </Button>
-                  <Button size="small" onClick={handleShowAll}>
+                  <Button
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                    size="small"
+                    onClick={handleShowAll}
+                  >
                     Show All
                   </Button>
                 </div>
+                <Divider sx={{ my: 1 }} />
 
                 {/* List of columns with Switches */}
                 {columns.map((col) => (

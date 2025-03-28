@@ -18,7 +18,7 @@ function Table() {
     { field: "phone", headerName: "Phone" },
   ];
 
-  const data = employees.map((emp) => ({
+  const data = employees.slice(0, 3).map((emp) => ({
     id: emp._id, // Assuming `id` exists in employees
     name: emp.firstName + " " + emp.lastName,
     email: emp.email,
@@ -38,6 +38,7 @@ function Table() {
           data={data}
           showPagination={false}
           showSearch={false}
+          showActions={false}
         />
       {/* <Box sx={{mt:2, px:1.5}}> */}
       <Box display="flex" justifyContent="flex-end" mt={1} mx={1}>
@@ -50,9 +51,7 @@ function Table() {
           More
         </Button>
       </Box>
-      {/* </Box> */}
       </Box>
-      {/* <DynamicTable columns={employeeColumns} data={employees} title="Employee" handleOpenDialog={handleOpenDialog} /> */}
     </>
   );
 }

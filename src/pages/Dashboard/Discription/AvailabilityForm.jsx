@@ -16,7 +16,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
 
 function AvailabilityForm() {
-  const [car, setCar] = useState("");
+  const [dep, setDep] = useState("");
   const [date, setDate] = useState(dayjs());
   const [time, setTime] = useState(dayjs());
   const [viewMode, setViewMode] = useState("date"); // 'date' or 'month'
@@ -24,12 +24,12 @@ function AvailabilityForm() {
 
   const handleCheckAvailability = () => {
     console.log("Checking availability for:", {
-      car,
+      dep,
       date: date.format("YYYY-MM-DD"),
       time: time.format("HH:mm"),
     });
     alert(
-      `Checking availability for ${car} on ${date.format(
+      `Checking availability for ${dep} on ${date.format(
         "YYYY-MM-DD"
       )} at ${time.format("HH:mm")}`
     );
@@ -39,13 +39,13 @@ function AvailabilityForm() {
     <Card sx={{ borderRadius: 2, boxShadow: 2, p: 2 }}>
       <CardContent>
         <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-          Car Availability
+          Department Availability
         </Typography>
         <Box display="flex" alignItems="center" justifyContent="space-evenly" gap={2}>
   {/* Car Number Dropdown */}
   <Select
-    value={car}
-    onChange={(e) => setCar(e.target.value)}
+    value={dep}
+    onChange={(e) => setDep(e.target.value)}
     displayEmpty
     size="small"
     sx={{
@@ -60,7 +60,7 @@ function AvailabilityForm() {
       },
     }}
   >
-    <MenuItem value="">Car number</MenuItem>
+    <MenuItem value="">Dep number</MenuItem>
     <MenuItem value="ABC-123">ABC-123</MenuItem>
     <MenuItem value="XYZ-789">XYZ-789</MenuItem>
   </Select>

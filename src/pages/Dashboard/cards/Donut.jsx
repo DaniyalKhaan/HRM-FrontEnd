@@ -9,19 +9,48 @@ import {
   Stack,
 } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
-import { FiArrowUp, FiArrowDown } from "react-icons/fi";
-
-const HiringVsCancelData = [
-  { value: 54, color: "#0066FF" }, // No label inside the donut
-  { value: 20, color: "#44D16D" },
-  { value: 26,  color: "#FF3B30" },
-];
+import { useEmployees } from "../../employees/context";
 
 function Donut_Card() {
+  // Get employees from context
+  const { employees } = useEmployees();
+
+  // If employees are not loaded yet, render a fallback (or a loader)
+  if (!employees) return <Typography>Loading...</Typography>;
+
+  // Calculate counts for each status
+  const totalEmployees = employees.length;
+  const activeCount = employees.filter((emp) => emp.status === "active").length;
+  const inactiveCount = employees.filter(
+    (emp) => emp.status === "inactive"
+  ).length;
+  const resignedCount = employees.filter(
+    (emp) => emp.status === "resigned"
+  ).length;
+  const terminatedCount = employees.filter(
+    (emp) => emp.status === "terminated"
+  ).length;
+
+  // Prepare data for the PieChart (donut)
+  const pieData = [
+    { value: activeCount, color: "#0066FF" },
+    { value: inactiveCount, color: "#44D16D" },
+    { value: resignedCount, color: "#FF3B30" },
+    { value: terminatedCount, color: "#F39C12" }, // Custom color for terminated
+  ];
+
+  // Prepare legend data to display below the chart
+  const legendData = [
+    { label: "Total", value: totalEmployees, color: "#000000" },
+    { label: "Active", value: activeCount, color: "#0066FF" },
+    { label: "Inactive", value: inactiveCount, color: "#44D16D" },
+    { label: "Resigned", value: resignedCount, color: "#FF3B30" },
+    { label: "Terminated", value: terminatedCount, color: "#F39C12" },
+  ];
+
   return (
     <Card
-    elevation={3}
-
+      elevation={3}
       sx={{
         borderRadius: 2,
         width: 288,
@@ -30,10 +59,10 @@ function Donut_Card() {
       }}
     >
       <CardContent>
-        {/* Title */}
+        {/* Header: Title and Chip */}
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body1" fontWeight="bold" color="text.secondary">
-            Hire vs Cancel
+            Employee Status
           </Typography>
           <Chip
             label="Today"
@@ -42,65 +71,60 @@ function Donut_Card() {
           />
         </Box>
 
-        {/* Underline */}
+        {/* Divider */}
         <Divider sx={{ my: 2 }} />
 
-        {/* Donut Chart Centered */}
-        <Box display="flex" justifyContent="center">
-          <PieChart
-            series={[
-              {
-                data: HiringVsCancelData,
-                innerRadius: 50, // Creates donut effect
-                outerRadius: 70,
-                paddingAngle: 0, // Removes slice spacing
-                cornerRadius: 0, // Ensures smooth edges
-              },
-            ]}
-            
-            width={200}
-            height={150}
-          />
-        </Box>
+        <Box>
+          {/* Donut Chart Centered */}
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            sx={{ width: "100%", bgcolor: "red" }}
+          >
+            <PieChart
+              series={[
+                {
+                  data: pieData,
+                  innerRadius: 50, // Creates donut effect
+                  outerRadius: 70,
+                  paddingAngle: 0, // Removes slice spacing
+                  cornerRadius: 0, // Ensures smooth edges
+                },
+              ]}
+              width={200}
+              height={150}
+            />
+          </Box>
 
-        {/* Legend Below the Donut Chart */}
-        <Stack spacing={1} mt={2}>
-          {[
-            { label: "Total Hired", value: 54, color: "#0066FF", isIncrease: true },
-            { label: "Total Canceled", value: 20, color: "#44D16D", isIncrease: true },
-            { label: "Total Pending", value: 26, color: "#FF3B30", isIncrease: false },
-          ].map((item) => (
-            <Box
-              key={item.label}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Box display="flex" alignItems="center">
-                <Box
-                  sx={{
-                    width: 10,
-                    height: 10,
-                    bgcolor: item.color,
-                    borderRadius: "50%",
-                    mr: 1,
-                  }}
-                />
-                <Typography variant="body2">{item.label}</Typography>
-              </Box>
-              <Box display="flex" alignItems="center">
+          {/* Legend Below the Donut Chart */}
+          <Stack spacing={1} mt={2}>
+            {legendData.map((item) => (
+              <Box
+                key={item.label}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Box display="flex" alignItems="center">
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      bgcolor: item.color,
+                      borderRadius: "50%",
+                      mr: 1,
+                    }}
+                  />
+                  <Typography variant="body2">{item.label}</Typography>
+                </Box>
                 <Typography variant="body2" fontWeight="bold">
-                  {item.value}%
+                  {item.value}
                 </Typography>
-                {item.isIncrease ? (
-                  <FiArrowUp color="green" style={{ marginLeft: 4 }} />
-                ) : (
-                  <FiArrowDown color="red" style={{ marginLeft: 4 }} />
-                )}
               </Box>
-            </Box>
-          ))}
-        </Stack>
+            ))}
+          </Stack>
+        </Box>
       </CardContent>
     </Card>
   );

@@ -4,6 +4,8 @@ import axiosInstance from "../services/axiosInstance";
 export const getEmployees = async () => {
   try {
     const response = await axiosInstance.get("/employees");
+    // console.log(`Emoloyees call is called from Employees Service  ${response.data}`)
+
     return response.data;
   } catch (error) {
     console.error("Error fetching employees:", error);

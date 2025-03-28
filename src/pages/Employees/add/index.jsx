@@ -144,11 +144,13 @@ const EmployeesForm = ({ open, onClose, onSubmit, Mode }) => {
         if (!formData.position.trim())
           stepErrors.position = "Position is required";
         if (!formData.departmentId.trim())
-          stepErrors.position = "Department is required";
+          stepErrors.departmentId = "Department is required";
         if (!formData.salary) stepErrors.salary = "Salary is required";
         if (!formData.dob) stepErrors.dob = "Date of Birth is required";
         if (!formData.joiningDate)
           stepErrors.joiningDate = "Joining Date is required";
+        if (!formData.status.trim())
+          stepErrors.status = "Please choose Employee Status";
         break;
       case 3:
         if (!formData.emergencyContact.name.trim())

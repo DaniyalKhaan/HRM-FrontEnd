@@ -1,10 +1,12 @@
 import React from "react";
 import { Stack } from "@mui/system";
-import Income_Card from "./Income";
-import Expense_Card from "./Expense";
+import Employees from "./Employees";
+import Departments from "./Departments";
 import Donut_Card from "./Donut";
 import Label from "./Heading";
-import StatsCard from "../../../utilities/cards/card";
+import Card from "../../../utilities/cards/Card";
+import { EmployeesProvider } from "../../employees/context";
+import { DepartmentProvider } from "../../departments/context";
 
 function Cards() {
   return (
@@ -16,29 +18,29 @@ function Cards() {
       ml={2.2}
     >
       <Label />
-      <Income_Card />
-      <Expense_Card />
-      <Donut_Card />
-      <StatsCard
-        title="Income"
-        chipLabel="Today"
-        mainAmount="$9,460.00"
-        changeDirection="down"
-        changePercentage="1.5%"
-        comparedText="Compared to $9,940 yesterday"
-        lastWeekLabel="Last week Income"
-        lastWeekAmount="$25,658.00"
+
+      <EmployeesProvider>
+        <Employees />
+      </EmployeesProvider>
+
+      <DepartmentProvider>
+        <Departments />
+      </DepartmentProvider>
+
+      <EmployeesProvider>
+        <Donut_Card />
+      </EmployeesProvider>
+
+      <Card
+        title="Total Managers"
+        mainNo="4"
+        cardText="All managers are actively overseeing their teams"
       />
 
-      <StatsCard
-        title="Expenses"
-        chipLabel="This Week"
-        mainAmount="$4,200.00"
-        changeDirection="up"
-        changePercentage="2.3%"
-        comparedText="Compared to $3,890 last week"
-        lastWeekLabel="Last week Expenses"
-        lastWeekAmount="$15,200.00"
+      <Card
+        title="Total Full Stack Employees"
+        mainNo="11"
+        cardText="No new additions to the full-stack team this month"
       />
     </Stack>
   );
